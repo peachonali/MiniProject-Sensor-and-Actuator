@@ -1,0 +1,9 @@
+เรียกใช้คำสั่งใน VScode ติดตั้งอะไรก็แล้วแต่ในterminal & "C:/Program Files/Python313/python.exe" 
+
+แต่ถ้าขกพิม เรียกตลอดจากข้างบนใช้อันนี้			& "C:/Program Files/Python313/python.exe" -m venv .venv
+					Set-ExecutionPolicy -Scope Process -							ExecutionPolicy Bypass -Force 
+					.\.venv\Scripts\Activate.ps1
+
+C:\Program Files\Python313\ 
+
+วิธีเช็คว่า Terminal ใช้งานได้ไหม คือ ไปปิดอันนี้  กด start  > setting > Apps > Advenced app setting > App execution aliases > หา python.exe และ python3.exe > ปิดสวิตช์ทั้งสอง (Disable)

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title> 
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body> 
+    <div class="main-panel">
+        <div class="panel-header">
+            <div class="header-title">DASHBOARD</div>
+            <div class="system-status">
+                <span>SYSTEM:</span> <span class="status-text">ONLINE</span>
+                <div class="status-light"></div>
+            </div>
+        </div>
+        <div class="grid-container">
+
+            <div class="sensor-box" id="tempBox" >
+                <div class="status-led"></div><span class="label">Temperature</span>
+
+                <div class="thermo-container">
+                    <div class="thermo-scale">
+                        <div class="scale-mark" data-val="50"></div>
+                        <div class="scale-mark" data-val="45"></div>
+                        <div class="scale-mark" data-val="40"></div>
+                        <div class="scale-mark" data-val="35"></div>
+                        <div class="scale-mark" data-val="30"></div>
+                        <div class="scale-mark" data-val="25"></div>
+                        <div class="scale-mark" data-val="20"></div>
+                        <div class="scale-mark" data-val="15"></div>
+                        <div class="scale-mark" data-val="10"></div>
+                        <div class="scale-mark" data-val="5"></div>
+                        <div class="scale-mark" data-val="0"></div>
+                    </div>
+                    
+                    <div class="thermo-body">
+                        <div class="thermo-fill" id="thermoFill"></div>
+                        <div class="thermo-bulb"></div>
+                    </div>
+                    <div class="thermo-callout" id="thermoCallout">
+                        <span id="thermoCalloutValue">--</span> °C  
+                </div>
+                </div>
+            <span class="value hidden-value" id="temperature">--</span>
+            <span class="hidden-value"> °C</span>
+            </div>
+            
+            <div class="sensor-box" id="humBox">
+                <div class="status-led"></div><span class="label">Humidity</span>
+
+                <div class="humidity-container">
+                    <div class="bubble b1"></div>
+                    <div class="bubble b2"></div>
+                    <div class="bubble b3"></div>
+                    <div class="bubble b4"></div>
+                    <div class="bubble b5"></div>
+                    <div class="bubble b6"></div>
+                    <div class="bubble b7"></div>
+                    <div class="bubble b8"></div>
+
+                    <div class="water-drop">
+                        <div class="water-fill" id="waterFill"></div>
+
+                        <div class="drop-shine"></div>
+
+                        <div class="value-wrapper">
+                            <span class="value" id="humidityValue">--</span>
+                            <span class="unit">%</span>
+                        </div>
+                    </div>
+                </div>
+                <span class="value hidden-value" id="humidity">--</span>
+            </div>
+
+            <div class="sensor-box" id="distBox">
+                <div class="status-led"></div><span class="label">Distance</span>
+                
+                <div class="radar-container">
+                    <div class="radar-screen" id="radarScreen">
+                        <div class="radar-grid"></div>
+                        <div class="radar-beam"></div>
+                        <div class="radar-dot"></div>
+                        <div class="scan-overlay"></div>
+                        <div class="dist-value-wrapper">
+                            <span class="value" id="distance">--</span>
+                            <span class="unit">CM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sensor-box" id="waterBox">
+                <div class="status-led"></div><span class="label">Water Level</span>
+
+                <div class="industrial-tank-container">
+                    <div class="industrial-tank">
+                        <div class="glass-tube">
+                            <div class="liquid" id="liquidFill"></div>
+                        </div>
+                        <div class="tank-frame top"></div>
+                        <div class="tank-value">
+                            <span id="waterLevel">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <canvas id="myChart" width="150" height="636"></canvas>
+    <img src="img/earth.png" alt="Earth" id="earthImage">
+
+    <script src="API.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

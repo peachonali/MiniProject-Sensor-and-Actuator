@@ -1,0 +1,631 @@
+body /* พื้นหลังแบบไล่สี 3 มิติ */
+{
+    background: radial-gradient(circle at bottom
+    ,#bfbfd6 25%,#4f5dd7 30%
+    ,#0a0a60 50%,#070013 95%);
+    padding: 0;
+    overflow: hidden;
+}
+#earthImage /* รูปโลก */
+{
+    width: 700px;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+.grid-container /* ตำแหน่งกล่องเซ็นเซอร์ */
+{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    padding: 0 30px;      /* เว้นซ้าย-ขวาเท่ากันแบบแท้จริง */
+    margin-top: 40px;     /* แทน top:10% เพราะ % ทำให้เพี้ยน */
+    position: relative;
+    z-index: 1;
+}
+.sensor-box /* กล่องเซ็นเซอร์ 3 มิติ */
+{
+    position: relative;
+    overflow: hidden;
+
+    background: 
+    radial-gradient(at top left, rgba(255,255,255,0.35), rgba(255,255,255,0) 60%),
+    linear-gradient(135deg, rgba(85,110,255,0.2), rgba(160,75,255,0.15)),
+    rgba(255,255,255,0.08);
+    
+    backdrop-filter: blur(25px) saturate(180%);
+
+    border-radius: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25),
+    inset 0 1px 8px rgba(255, 255, 255, 0.2);
+
+    padding: 50px;
+    min-width: 250px;
+    min-height: 250px;
+    text-align: center;
+    color: white;
+    font-size: 1.5rem;
+    box-sizing: border-box;
+}
+.sensor-box .label /* ป้ายชื่อเซ็นเซอร์ */
+{
+    display: block; /* ให้เต็มบรรทัด */
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.5rem;
+    color: #ffffff; /* สีเขียว Hacker */
+    text-transform: uppercase; /* ตัวพิมพ์ใหญ่ทั้งหมด */
+    letter-spacing: 3px; /* ห่างๆ กันหน่อยให้ดูเท่ */
+    text-shadow: 0 0 10px rgb(0, 0, 0); /* แสงเรือง */
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+.sensor-box::before /* เอฟเฟกต์แสงนุ่มนวล */
+{
+    content: "";
+    position: absolute;
+    inset: -20%;
+    background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), transparent 60%),
+        radial-gradient(circle at 70% 70%, rgba(150,80,255,0.20), transparent 70%),
+        radial-gradient(circle at 50% 50%, rgba(80,160,255,0.18), transparent 70%);
+    filter: blur(35px);
+    opacity: 0.55;
+}
+.sensor-box .value /* ฟอนต์ค่าของเซ็นเซอร์ */
+{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+
+.main-panel { /* แผงควบคุมหลัก */
+    border: 2px solid #444;
+    border-radius: 15px;
+    padding: 20px;
+    background: 
+    radial-gradient(at top left, rgba(255,255,255,0.35), rgba(255,255,255,0) 60%),
+    linear-gradient(135deg, rgba(85,110,255,0.2), rgba(160,75,255,0.15)),
+    rgba(255,255,255,0.08);
+    border-radius: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25),
+    inset 0 1px 8px rgba(255, 255, 255, 0.2);
+    max-width: 1475px;
+    width: 150%;
+}
+.panel-header /* ส่วนหัวของแผงควบคุม */
+{ 
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+.header-title { /* สไตล์หัวข้อ */
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    color: #ffffff;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.system-status /* ส่วนสถานะระบบ */
+{ 
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #888;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
+.status-text /* ข้อความสถานะ */
+{ 
+    color: #33ff00; text-shadow: 0 0 5px #33ff00; 
+} 
+.status-light /* ไฟสถานะกระพริบ */
+{ 
+    width: 12px; height: 12px;
+    background-color: #33ff00;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #33ff00;
+    animation: blink 1s infinite;
+}
+@keyframes blink /* เอฟเฟกต์กระพริบ */
+{
+    0%,100% {opacity:1;}
+    50% {opacity:0.3;} 
+}
+.status-led /* ไฟสถานะมุมขวาบนของกล่องเซ็นเซอร์ */
+{
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 8px; height: 8px;
+    background-color: #00ff00;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #00ff00;
+    opacity: 0.8;
+}
+
+
+.thermo-container /* กล่อง thermometer */
+{
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+    position: relative; /* <-- เพิ่ม position: relative */
+    height: 220px;      /* <-- เพิ่ม height ให้ตรงกับ thermo-body */
+}
+.thermo-scale /* สเกลด้านข้าง */
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 200px;
+    color: white;
+    font-size: 1rem;
+}
+.scale-mark /* เครื่องหมายสเกล */
+{
+    position: relative;
+    padding-right: 10px;
+}
+.scale-mark::after /* ตัวเลขอุณหภูมิ */
+{
+    content: attr(data-val) "°C";
+    position: absolute;
+    right: 0;
+    top: -8px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+.thermo-body /* ตัว thermometer */
+{
+    position: relative;
+    width: 20px;
+    height: 220px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.4);
+    backdrop-filter: blur(10px);
+    box-shadow: inset 0 2px 6px rgba(255,255,255,0.3),
+                0 2px 6px rgba(0,0,0,0.4);
+}
+.thermo-fill /* สีที่ขึ้นลง */
+{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 0%;
+    border-radius: 20px 20px 0 0;
+    transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(
+        to top,
+        #0033cc 0%,    /* หนาวสุด น้ำเงินเข้ม */
+        #3399ff 15%,   /* ฟ้าอ่อน */
+        #33ffcc 30%,   /* เขียวอ่อน */
+        #ffcc33 50%,   /* ส้มอ่อน */
+        #ff9933 65%,   /* ส้มเข้ม */
+        #ff3838 85%,   /* แดงเข้ม */
+        #cc0000 100%   /* ร้อนสุด แดงเข้มสุด */
+    );
+    transform-origin: bottom;
+    animation: fillWave 1.5s ease-in-out infinite;
+}
+@keyframes fillWave /* เอฟเฟกต์คลื่น */
+{
+  0% { transform: scaleY(0.95); }
+  50% { transform: scaleY(1.05); }
+  100% { transform: scaleY(0.95); }
+}
+.hidden-value /* คลาสสำหรับซ่อนตัวเลขเดิม */
+{ 
+    display: none;
+}
+.thermo-callout /* สไตล์ของป้ายชี้ (Callout) */
+{ 
+    position: absolute;
+    left: 65%; /* ปรับตำแหน่งซ้าย-ขวา ตามชอบ */
+    bottom: 0%;  /* JS จะอัปเดตค่านี้ */
+    transform: translateY(50%); /* จัดให้อยู่กึ่งกลางแนวตั้ง */
+    background-color: white;
+    color: #0056b3; /* สีน้ำเงินเข้ม */
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 6px 10px;
+    border-radius: 6px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    pointer-events: none; /* ป้องกันไม่ให้บังการคลิก */
+    transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* ให้เคลื่อนที่นุ่มนวล */
+    opacity: 0; /* เริ่มแบบซ่อนไว้ก่อน */
+}
+.thermo-callout::after /* สามเหลี่ยมชี้ (Pointer) */
+{ 
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -15px; /* ชี้ไปทางขวา */
+    margin-top: -7px; /* จัดกึ่งกลาง */
+    border-width: 7px;
+    border-style: solid;
+    border-color: transparent white transparent transparent;/* สามเหลี่ยมชี้ไปทางขวา */
+}
+
+
+.humidity-container /* กล่องความชื้น */
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px; /* เพิ่มพื้นที่ให้ฟองอากาศลอย */
+    margin-top: 10px;
+    position: relative;
+}
+.water-drop /* สร้างรูปทรงหยดน้ำ */
+{
+    position: relative;
+    width: 150px;
+    height: 150px;
+    top: 50px;
+    /* รูปทรงหยดน้ำมาตรฐาน */
+    border-radius: 0 50% 50% 50%;
+    transform: rotate(45deg); /* หมุนให้ปลายชี้ขึ้น */
+    /* พื้นหลังตอนไม่มีน้ำ (สีน้ำเงินจางๆ) */
+    background-color: rgba(0, 15, 40, 0.4);
+    /* ขอบบางๆ สีฟ้าสว่าง */
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    /* เงาเรืองแสงด้านหลัง */
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3),
+    inset 0 0 10px rgba(0, 0, 0, 0.2);
+    overflow: hidden; /* บังคับให้น้ำอยู่แค่ในรูปทรง */
+    z-index: 10; /* อยู่เหนือฟองอากาศ */
+}
+.water-fill /* ส่วนที่เป็นน้ำในหยด */
+{
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    left: -50%;
+    top: -50%;
+    background: linear-gradient(to top, 
+    #000000 20%,   /* ก้นลึกสุด */
+    #0033cc 65%,    /* กลางลึก */
+    #008cff 85%,  /* ผิวน้ำ */
+    #e0ffff 100%  /* แสงกระทบผิวน้ำ */
+    );
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+    /* หมุนกลับ -45deg และเลื่อนขึ้นลงด้วย translateY */
+    transform: rotate(-45deg) translateY(100%);
+    transform-origin: center;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: brightness(1.1);
+}
+.drop-shine /* ชั้นเงาสะท้อนบนหยดน้ำ */
+{
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 20;
+}
+.drop-shine::before /* เงาสะท้อนบนหยดน้ำ */
+{ 
+    content: '';
+    position: absolute;
+    bottom: 6px; 
+    right: 6px;  
+    width: 85%;
+    height: 85%;
+    border-radius: 200px;
+    box-shadow: inset -5px -5px 4px -1px rgba(255, 255, 255, 0.7);
+    filter: blur(0.5px);
+}
+.value-wrapper /* ตัวเลขความชื้นตรงกลางหยดน้ำ */
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg); /* หมุนกลับให้ตรง */
+    text-align: center;
+    z-index: 30;
+    width: 100%;
+    /* จัดเรียงแนวนอน */
+    display: flex;
+    justify-content: center;
+    align-items: baseline; /* ให้ฐานตัวหนังสือเท่ากัน */
+    gap: 5px; /* ระยะห่างระหว่างตัวเลขกับ % */
+}
+.water-drop .value /* สไตล์ตัวเลข */
+{
+    display: block;
+    color: white;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+.water-drop .unit /* สไตล์ % */
+{
+    display: block;
+    color: rgba(255,255,255,0.9);
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-top: 4px;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+.bubble /* ฟองอากาศลอยขึ้น */
+{
+    position: absolute;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.4); 
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    z-index: 40; 
+    animation: floatBubble 4s infinite ease-in;
+}
+/* กำหนดตำแหน่งและขนาดของแต่ละฟอง */
+.b1 { width: 14px; height: 14px; left: 20%; top: 95%; animation-delay: -20s; animation-duration: 2.5s; }
+.b2 { width: 8px; height: 8px; left: 15%; top: 90%; animation-delay: -1s; animation-duration: 3s; }
+.b3 { width: 10px; height: 10px; left: 25%; top: 45%; animation-delay: -3s; animation-duration: 2.8s; }
+.b4 { width: 8px; height: 8px; left: 30%; top: 60%; animation-delay: -5s; animation-duration: 3.5s; }
+.b5 { width: 12px; height: 12px; right: 30%; top: 55%; animation-delay: -7s; animation-duration: 3.2s; }
+.b6 { width: 8px; height: 8px; right: 25%; top: 60%; animation-delay: -2s; animation-duration: 2.7s; }
+.b7 { width: 13px; height: 13px; right: 30%; top: 105%; animation-delay: -4s; animation-duration: 3.8s; }
+.b8 { width: 9px; height: 9px; right: 20%; top: 95%; animation-delay: -6s; animation-duration: 2.9s; }
+@keyframes floatBubble /* เอฟเฟกต์ฟองอากาศลอยขึ้น */
+{
+    0% {transform: translateY(20px) scale(0.7);opacity: 0.9;}
+    30% {opacity: 0.8;}
+    80% {opacity: 0.8;}
+    100% {transform: translateY(-40px) scale(1.2);opacity: 0.8;}
+}
+
+
+.radar-container /* กล่องเรดาร์ของDistance Sensor */
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    margin-top: 10px;
+    position: relative;
+}
+.radar-screen /* จอเรดาร์ */
+{
+    position: relative;
+    width: 200px;
+    height: 200px;
+    top: 40px; /* ปรับตำแหน่งลง */
+    border-radius: 50%;
+
+    background-color: #000; /* พื้นหลังสีดำ */
+    border: 2px solid #33ff00;
+    box-shadow: 0 0 15px rgba(51, 255, 0, 0.3),
+    inset 0 0 20px rgba(51, 255, 0, 0.2);
+    overflow: hidden;
+    z-index: 10;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.radar-grid /* เส้นกริดเรดาร์ */
+{
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background:
+    linear-gradient(90deg, transparent 49.5%, /* แนวตั้ง */
+    rgba(51, 255, 0, 0.3) 50%, transparent 50.5%),
+    linear-gradient(0deg, transparent 49.5%, /* แนวนอน */
+    rgba(51, 255, 0, 0.3) 50%, transparent 50.5%),
+    repeating-radial-gradient(circle at 50% 50%,
+    transparent 5px,transparent 15px,
+    rgba(51, 255, 0, 0.3) 20px);
+}
+.radar-beam /* ลำแสงหมุน */
+{
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg,transparent 0%,
+    rgba(51, 255, 0, 0.0) 60%, 
+    rgba(51, 255, 0, 0.1) 80%,
+    rgb(51, 255, 0) 100%);
+    animation: radarSweep 1s linear infinite; /* ความเร็วลำแสง */
+    z-index: 5;
+}
+@keyframes radarSweep /* เอฟเฟกต์ลำแสงหมุน */
+{
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+.radar-dot  /* จุดเป้าหมายกระพริบ */
+{
+    position: absolute;
+    top: 20%; 
+    right: 30%;
+    width: 10px;
+    height: 10px;
+    background-color: #ccffcc; /* ขาวอมเขียว */
+    border-radius: 50%;
+    box-shadow: 0 0 8px #33ff00, 0 0 15px #33ff00;
+    z-index: 6;
+    animation: blipPulse 0.7s ease-in-out infinite alternate;
+}
+@keyframes blipPulse /* เอฟเฟกต์จุดเป้าหมายกระพริบ */
+{
+    0% { opacity: 0.3; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1.5); }
+}
+.scan-overlay /* เอฟเฟกต์สแกนเส้นขยับ */
+{
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+    rgba(0,0,0,0) 50%,
+    rgba(0,0,0,0.2) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    z-index: 20;
+}
+.dist-value-wrapper /* ตัวเลขระยะทางตรงกลางจอเรดาร์ */
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 30;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 5px 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(51, 255, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: baseline; /* ให้ฐานตัวหนังสือเท่ากัน */
+    gap: 5px; /* ระยะห่างระหว่างตัวเลขกับ % */
+}
+.radar-screen .value 
+{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #33ff00;
+    text-shadow: 0 0 5px rgba(51, 255, 0, 0.8);
+    line-height: 1;
+}
+.radar-screen .unit 
+{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #33ff00;
+    text-shadow: 0 0 5px rgba(51, 255, 0, 0.8);
+    line-height: 1;
+}
+
+
+.industrial-tank-container /* กล่องถังSensor Water Level */
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    top: 40px;
+    margin-top: 10px;
+    position: relative;
+}
+.industrial-tank /* ตัวถังน้ำแบบอุตสาหกรรม */
+{
+    position: relative;
+    width: 130px;
+    height: 190px;
+    background: linear-gradient(145deg, #ffffff, #3c3a3a); /* สีโลหะเข้ม */
+    border-radius: 10px;
+    box-shadow: 
+        5px 5px 15px rgba(0,0,0,0.5), 
+        -2px -2px 5px rgba(255,255,255,0.1);
+    padding: 10px; /* เว้นระยะให้เห็นกรอบ */
+    box-sizing: border-box;
+    z-index: 10;
+}
+.tank-frame  /* กรอบฝาบนถัง */
+{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 8px;
+    background: linear-gradient(to right, #E5E5E5, #E5E5E5, #E5E5E5);
+    border-radius: 2px;
+    box-shadow: 0 1px 3px #000000;
+    z-index: 20;
+}
+.tank-frame.top /* กรอบฝาบนถัง */
+{ top: 5px; }
+.glass-tube /* ท่อแก้วภายในถัง */
+{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 10, 20, 0.6); /* พื้นหลังแก้วมืดๆ */
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.8), inset 0 0 2px rgba(255,255,255,0.2);
+    overflow: hidden;
+}
+.liquid  /* ส่วนที่เป็นน้ำในถัง */ 
+{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(to top, 
+    #0000cc 40%, 
+    #0033ff 80%);
+    box-shadow: 0 0 20px rgba(0, 102, 255, 0.5);
+    transition: height 0.5s ease-out;
+    z-index: 1;
+}
+.liquid::before /* คลื่นน้ำบนผิวน้ำ */
+{
+    content: "";
+    position: absolute;
+    bottom: 100%; /* วางทับบนยอดน้ำพอดี */
+    left: 0;
+    width: 200%;  /* กว้าง 2 เท่า เพื่อให้เลื่อนวนลูปได้ */
+    height: 40px; /* ความสูงของลอนคลื่น */
+    background: linear-gradient(to top, #0000cc 0%, #0033ff 40%, #3399ff 80%, #99ddff 100%);
+    -webkit-mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100V50c250,0,250,50,500,50S750,50,1000,50v50H0z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100V50c250,0,250,50,500,50S750,50,1000,50v50H0z'/%3E%3C/svg%3E");
+    -webkit-mask-size: 50% 100%;
+    mask-size: 50% 100%;
+    -webkit-mask-repeat: repeat-x;
+    mask-repeat: repeat-x;
+    animation: wave 5s linear infinite reverse;
+}
+.liquid::after /* คลื่นน้ำชั้นที่สอง เพิ่มความสมจริง */
+{
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    width: 200%;
+    height: 35px;
+    background: linear-gradient(to top, #0000cc 0%, #0033ff 40%, #3399ff 80%, #99ddff 100%);
+    -webkit-mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100V50c250,0,250,50,500,50S750,50,1000,50v50H0z'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 100' preserveAspectRatio='none'%3E%3Cpath d='M0,100V50c250,0,250,50,500,50S750,50,1000,50v50H0z'/%3E%3C/svg%3E");
+    -webkit-mask-size: 50% 100%;
+    mask-size: 50% 100%;
+    -webkit-mask-repeat: repeat-x;
+    mask-repeat: repeat-x;
+    animation: wave 5s linear infinite; /* ไหลสวนทาง */
+}
+@keyframes wave /* เอฟเฟกต์คลื่นน้ำ */
+{
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); /* เลื่อนไปครึ่งทางแล้ววนลูป */}
+}
+.tank-value /* ตัวเลขระดับน้ำตรงกลางถัง */
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    z-index: 30;
+}
+.tank-value span /* สไตล์ตัวเลขระดับน้ำตรงกลางถัง */
+{
+    font-family: 'Courier New', Courier, monospace; /* ฟอนต์แนวอุตสาหกรรม */
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #e6f7ff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
